@@ -1,17 +1,12 @@
-import struct
+from helpers import _uint16, _uint32, _uint64
 import datetime
+import templates
 
 
 class BaseSection(object):
 
-    _uint8 = struct.Struct(b'>B')
-    _uint16 = struct.Struct(b'>H')
-    _uint24 = struct.Struct(b'>HB')
-    _uint32 = struct.Struct(b'>I')
-    _uint64 = struct.Struct(b'>Q')
-
     def __init__(self, data, offset):
-        self._length = self._uint32.unpack_from(data, offset)[0]
+        self._length = _uint32.unpack_from(data, offset)[0]
         self._data = data[offset:offset+self._length]
         self._section_num = int(self._data[5])
 
@@ -58,7 +53,7 @@ class IndicatorSection(BaseSection):
 
     @property
     def total_length(self):
-        return self._uint64.unpack_from(self._data, 8)[0]
+        return _uint64.unpack_from(self._data, 8)[0]
 
 class IdentificationSection(BaseSection):
 
@@ -108,7 +103,7 @@ class IdentificationSection(BaseSection):
 
     @property
     def reference_date(self):
-        return datetime.datetime(self._uint16.unpack_from(self._data, 12)[0], int(self._data[14]), int(self._data[15]), int(self._data[16]), int(self._data[17]))
+        return datetime.datetime(_uint16.unpack_from(self._data, 12)[0], int(self._data[14]), int(self._data[15]), int(self._data[16]), int(self._data[17]))
 
     @property
     def production_status(self):
@@ -126,4 +121,67 @@ class IdentificationSection(BaseSection):
         else:
             return 'unknown: ' + str(data_type)
 
+class LocalUseSection(BaseSection):
 
+    @property
+    def exists(self):
+        return self.section_number == 2
+
+class GridDefinitionSection(BaseSection):
+
+    _grid_sources = {
+        0: 'specified in code',
+        1: 'predetermined',
+        255: 'not applicable'
+    }
+
+    _number_list_interpretation = {
+        0: 'no appended list',
+        1: 'Numbers define number of points corresponding to full coordinate circles (i.e. parallels).  Coordinate values on each circle are multiple of the circle mesh, and extreme coordinate values given in grid definition may not be reached in all rows.',
+        2: 'Numbers define number of points corresponding to coordinate lines delimited by extreme coordinate values given in grid definition which are present in each row.',
+        3: 'Numbers define the actual latitudes for each row in the grid. The list of numbers are integer values of the valid latitudes in microdegrees (scale by 106) or in unit equal to the ratio of the basic angle and the subdivisions number for each row, in the same order as specified in the "scanning mode flag" (bit no. 2)',
+        255: 'missing'
+    }
+
+    def __init__(self, data, offset):
+        super(GridDefinitionSection, self).__init__(data, offset)
+
+        self._template = templates.find_template(3, self.grid_definition_template_number, self._data)
+
+    @property
+    def grid_definition_source(self):
+        source = int(self._data, 5)
+        if source in self._grid_sources:
+            return self._grid_sources[source]
+        else:
+            return 'unknown: ' + source
+
+    @property
+    def data_point_count(self):
+        return _uint32.unpack_from(self._data, 6)[0]
+
+    @property
+    def optional_defining_number_count(self):
+        return int(self._data[10])
+
+    @property
+    def defining_number_interpretation(self):
+        interp = int(self._data[11])
+        if interp in self._number_list_interpretation:
+            return self._number_list_interpretation[interp]
+        else:
+            return 'unknown: ' + interp
+
+    @property
+    def grid_definition_template_number(self):
+        return _uint16.unpack_from(self._data, 12)[0]
+
+    @property
+    def template(self):
+        return self._template
+
+class EndSection(BaseSection):
+
+    @property
+    def valid(self):
+        return str(self._data[0:4].decode()) == '7777'

@@ -1,4 +1,4 @@
-from sections import IndicatorSection, IdentificationSection
+from sections import IndicatorSection, IdentificationSection, LocalUseSection, GridDefinitionSection
 
 class Message(object):
 
@@ -14,6 +14,14 @@ class Message(object):
 
         # Read second section
         self.sections.append(IdentificationSection(self._data, self.sections[-1].length))
+
+        # Read optional local use section
+        localUseSection = LocalUseSection(self._data, self.sections[-1].length)
+        if localUseSection.exists:
+            self.sections.append(localUseSection)
+
+        # Read Grid Definition section
+        self.sections.append(GridDefinitionSection(self._data, self.sections[-1].length))
 
     @property
     def length(self):
