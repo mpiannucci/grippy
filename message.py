@@ -15,13 +15,8 @@ class Message(object):
         self.sections.append(indicatorSection)
         self._data = data[offset:offset+self.sections[0].total_length]
 
-        print(offset)
-        print(self.sections[0].total_length)
-        print(offset+ self.sections[0].total_length)
-        print('----------------------------------------------------------------------------------------')
-
         # Read Identification section
-        offset += self.sections[-1].length
+        offset = self.sections[-1].length
         self.sections.append(IdentificationSection(self._data, offset))
 
         # Read optional local use section
@@ -72,10 +67,8 @@ def read_messages(filename, count=-1):
  
     offset = 0
     while offset < len(all_data):
-        print(offset)
-        print(len(all_data))
         messages.append(Message(all_data, offset))
-        offset = offset + messages[-1].length + 42
+        offset = offset + messages[-1].length
 
         if count > 0 and len(messages) == count:
             break
