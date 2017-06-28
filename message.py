@@ -1,4 +1,4 @@
-from sections import IndicatorSection, IdentificationSection, LocalUseSection, GridDefinitionSection
+from sections import * 
 
 class Message(object):
 
@@ -8,20 +8,43 @@ class Message(object):
 
         self.sections = []
 
-        # Read first section
+        # Read Indication section
         self.sections.append(IndicatorSection(data[offset:]))
-        self._data = data[offset:offset+self.sections[-1].total_length]
+        self._data = data[offset:offset+self.sections[0].total_length]
 
-        # Read second section
-        self.sections.append(IdentificationSection(self._data, self.sections[-1].length))
+        # Read Identification section
+        offset += self.sections[-1].length
+        self.sections.append(IdentificationSection(self._data, offset))
 
         # Read optional local use section
-        localUseSection = LocalUseSection(self._data, self.sections[-1].length)
-        if localUseSection.exists:
-            self.sections.append(localUseSection)
+        offset += self.sections[-1].length
+        local_use_section = LocalUseSection(self._data, offset)
+        if local_use_section.exists:
+            self.sections.append(local_use_section)
+            offset += self.sections[-1].length
 
         # Read Grid Definition section
-        self.sections.append(GridDefinitionSection(self._data, self.sections[-1].length))
+        self.sections.append(GridDefinitionSection(self._data, offset))
+
+        # Read Product Definition section
+        offset += self.sections[-1].length
+        self.sections.append(ProductDefinitionSection(self._data, offset))
+
+        # Read Data Representation section
+        offset += self.sections[-1].length
+        self.sections.append(DataRepresentationSection(self._data, offset))
+
+        # Read Bit Map section
+        offset += self.sections[-1].length
+        self.sections.append(BitMapSection(self._data, offset))
+
+        # Read Data section
+        offset += self.sections[-1].length
+        self.sections.append(DataSection(self._data, offset))
+
+        # Read End section
+        offset += self.sections[-1].length
+        self.sections.append(EndSection(self._data, offset))
 
     @property
     def length(self):

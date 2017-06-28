@@ -7,11 +7,8 @@ class BaseSection(object):
 
     def __init__(self, data, offset):
         self._length = _uint32.unpack_from(data, offset)[0]
-        print(offset)
-        print(self._length)
         self._data = data[offset:offset+self._length]
-        self._section_num = int(self._data[5])
-        print(self._section_num)
+        self._section_num = int(self._data[4])
 
     @property
     def length(self):
@@ -149,7 +146,7 @@ class GridDefinitionSection(BaseSection):
     def __init__(self, data, offset):
         super(GridDefinitionSection, self).__init__(data, offset)
 
-        self._template = templates.find_template(3, self.grid_definition_template_number, self._data)
+        self._template = templates.find_template(templates.BaseTemplate.grid_type, self.grid_definition_template_number, self._data)
 
     @property
     def grid_definition_source(self):
@@ -188,7 +185,27 @@ class ProductDefinitionSection(BaseSection):
     def __init__(self, data, offset):
         super(ProductDefinitionSection, self).__init__(data, offset)
 
+class DataRepresentationSection(BaseSection):
+
+    def __init__(self, data, offset):
+        super(DataRepresentationSection, self).__init__(data, offset)
+
+class BitMapSection(BaseSection):
+
+    def __init__(self, data, offset):
+        super(BitMapSection, self).__init__(data, offset)
+
+class DataSection(BaseSection):
+
+    def __init__(self, data, offset):
+        super(DataSection, self).__init__(data, offset)
+
 class EndSection(BaseSection):
+
+    def __init__(self, data, offset):
+        self._length = 4
+        self._section_num = 8
+        self._data = data[offset:offset+self._length]
 
     @property
     def valid(self):
