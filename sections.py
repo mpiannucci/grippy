@@ -7,8 +7,11 @@ class BaseSection(object):
 
     def __init__(self, data, offset):
         self._length = _uint32.unpack_from(data, offset)[0]
+        print(offset)
+        print(self._length)
         self._data = data[offset:offset+self._length]
         self._section_num = int(self._data[5])
+        print(self._section_num)
 
     @property
     def length(self):
@@ -179,6 +182,11 @@ class GridDefinitionSection(BaseSection):
     @property
     def template(self):
         return self._template
+
+class ProductDefinitionSection(BaseSection):
+
+    def __init__(self, data, offset):
+        super(ProductDefinitionSection, self).__init__(data, offset)
 
 class EndSection(BaseSection):
 
