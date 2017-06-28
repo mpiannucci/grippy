@@ -7,6 +7,12 @@ class BaseSection(object):
 
     def __init__(self, data, offset):
         self._length = _uint32.unpack_from(data, offset)[0]
+        print(int(data[offset+4]))
+        print(offset)
+        print(self._length)
+        print(offset+self._length)
+        print(len(data))
+        print('++++++++++++++++++++++++++++++++++++++++++++++')
         self._data = data[offset:offset+self._length]
         self._section_num = int(self._data[4])
 
@@ -37,7 +43,10 @@ class IndicatorSection(BaseSection):
 
     @property
     def valid(self):
-        return str(self._data[0:4].decode()) == 'GRIB'
+        try:
+            return str(self._data[0:4].decode()) == 'GRIB'
+        except:
+            return False
 
     @property
     def discipline(self):
