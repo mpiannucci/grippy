@@ -198,6 +198,14 @@ class BitMapSection(BaseSection):
     def __init__(self, data, offset):
         super(BitMapSection, self).__init__(data, offset)
 
+    @property
+    def bitmap_indicator_value(self):
+        return int(self._data[5])
+
+    @property
+    def has_bitmap(self):
+        return self.bitmap_indicator_value == 0
+
 class DataSection(BaseSection):
 
     def __init__(self, data, offset):

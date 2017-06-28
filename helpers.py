@@ -1,5 +1,6 @@
 import struct
 
+
 _uint8 = struct.Struct(b'>B')
 _uint16 = struct.Struct(b'>H')
 _uint24 = struct.Struct(b'>HB')
