@@ -31,7 +31,7 @@ class Message(object):
 
         # Read Product Definition section
         offset += self.sections[-1].length
-        self.sections.append(ProductDefinitionSection(self._data, offset))
+        self.sections.append(ProductDefinitionSection(self._data, offset, self.sections[0].discipline_value))
 
         # Read Data Representation section
         offset += self.sections[-1].length

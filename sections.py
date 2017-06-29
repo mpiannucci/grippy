@@ -43,12 +43,12 @@ class IndicatorSection(BaseSection):
             return False
 
     @property
+    def discipline_value(self):
+        return int(self._data[6])
+
+    @property
     def discipline(self):
-        dis_value = int(self._data[6])
-        if dis_value in self._disciplines:
-            return self._disciplines[dis_value]
-        else:
-            return 'unknown: ' + str(dis_value)
+        return self._disciplines.get(self.discipline_value)
 
     @property
     def edition(self):
@@ -185,10 +185,10 @@ class GridDefinitionSection(BaseSection):
 
 class ProductDefinitionSection(BaseSection):
 
-    def __init__(self, data, offset):
+    def __init__(self, data, offset, discipline):
         super(ProductDefinitionSection, self).__init__(data, offset)
 
-        self._template = templates.find_template(templates.BaseTemplate.product_type, self.product_definition_template_number, self._data)
+        self._template = templates.find_template(templates.BaseTemplate.product_type, self.product_definition_template_number, self._data, discipline)
 
     @property
     def coord_values_after_template(self):

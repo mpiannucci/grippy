@@ -445,8 +445,10 @@ class ProductTemplate(BaseTemplate):
 
 class HorizontalAnalysisForecastTemplate(ProductTemplate):
 
-    def __init__(self, data):
+    def __init__(self, data, discipline):
         super(HorizontalAnalysisForecastTemplate, self).__init__(self.product_type, 0, 'Analysis or forecast at a horizontal level or in a horizontal layer at a point in time', data)
+        self._discipline_number = discipline
+        self._product = self._products.get(self._discipline_number)
 
     @property
     def parameter_category_value(self):
@@ -454,7 +456,7 @@ class HorizontalAnalysisForecastTemplate(ProductTemplate):
 
     @property
     def parameter_category(self):
-        return self._products.get(self.parameter_category_value)
+        return self._product.get(self.parameter_category_value)
 
     @property
     def parameter_number_value(self):
@@ -465,7 +467,7 @@ class HorizontalAnalysisForecastTemplate(ProductTemplate):
         category = self.parameter_category
         if category is None:
             return None
-        return category.get(self.parameter_number_value)
+        return category.parameters.get(self.parameter_number_value)
 
     @property
     def generating_process_value(self):
@@ -599,13 +601,13 @@ class SimpleGridPointDataTemplate(BaseTemplate):
     def __init__(self, data):
         super(SimpleGridPointDataTemplate, self).__init__(self.data_type, 0, 'Grid Point Data - Simple Packing', data)
 
-def find_template(template_type, number, data):
+def find_template(template_type, number, data, discipline=-1):
     if template_type == BaseTemplate.grid_type:
         if number == 0:
             return LatitudeLongitudeGridTemplate(data)
     elif template_type == BaseTemplate.product_type:
         if number == 0:
-            return HorizontalAnalysisForecastTemplate(data)
+            return HorizontalAnalysisForecastTemplate(data, discipline)
     elif template_type == BaseTemplate.data_rep_type:
         if number == 0:
             return SimpleGridPointDataRepresentationTemplate(data)
