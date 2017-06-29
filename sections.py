@@ -188,10 +188,38 @@ class ProductDefinitionSection(BaseSection):
     def __init__(self, data, offset):
         super(ProductDefinitionSection, self).__init__(data, offset)
 
+        self._template = templates.find_template(templates.BaseTemplate.product_type, self.product_definition_template_number, self._data)
+
+    @property
+    def coord_values_after_template(self):
+        return _uint16.unpack_from(self._data, 5)[0]
+
+    @property
+    def product_definition_template_number(self):
+        return _uint16.unpack_from(self._data, 7)[0]
+
+    @property
+    def template(self):
+        return self._template
+
 class DataRepresentationSection(BaseSection):
 
     def __init__(self, data, offset):
         super(DataRepresentationSection, self).__init__(data, offset)
+
+        self._template = templates.find_template(templates.BaseTemplate.data_rep_type, self.data_representation_template_number, self._data)
+
+    @property
+    def data_point_count(self):
+        return _uint32.unpack(self._data, 5)[0]
+
+    @property
+    def data_representation_template_number(self):
+        return _uint16.unpack_from(self._data, 9)[0]
+
+    @property
+    def template(self):
+        return self._template
 
 class BitMapSection(BaseSection):
 
@@ -208,8 +236,15 @@ class BitMapSection(BaseSection):
 
 class DataSection(BaseSection):
 
-    def __init__(self, data, offset):
+    def __init__(self, data, offset, data_template):
         super(DataSection, self).__init__(data, offset)
+
+        self._data_representation_template = data_template
+
+    @property
+    def data_template(self):
+        return self._data_representation_template
+
 
 class EndSection(BaseSection):
 

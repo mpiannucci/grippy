@@ -43,7 +43,7 @@ class Message(object):
 
         # Read Data section
         offset += self.sections[-1].length
-        self.sections.append(DataSection(self._data, offset))
+        self.sections.append(DataSection(self._data, offset, self.sections[4].template))
 
         # Read End section
         offset += self.sections[-1].length
