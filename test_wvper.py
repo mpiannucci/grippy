@@ -2,10 +2,17 @@ import message
 import helpers
 import sys
 
-mess = message.read_messages('multi_1.at_10m.t12z.f000.grib2')
+
+#http://nomads.ncep.noaa.gov/cgi-bin/filter_wave_multi.pl?file=multi_1.at_10m.t00z.f000.grib2&all_lev=on&all_var=on&subregion=&leftlon=-71&rightlon=-70&toplat=41&bottomlat=40&dir=%2Fmulti_1.20170630
+#http://nomads.ncep.noaa.gov/cgi-bin/filter_wave_multi.pl?file=multi_1.at_10m.t00z.f000.grib2&all_lev=on&all_var=on&subregion=&leftlon=-71.4&rightlon=-71.2&toplat=40.4&bottomlat=-40.6&dir=%2Fmulti_1.20170630
+#mess = message.read_messages('multi_1.at_10m.t12z.f000.grib2')
+mess = message.read_messages('multi_ri.grib2')
 var = 'WVPER'
 
+d = None
 for m in mess:
+    if m.section_count < 3:
+        continue
     if m.sections[3].template.parameter_number is not None:
         if m.sections[3].template.parameter_number.abbrev == var:
             d = m
