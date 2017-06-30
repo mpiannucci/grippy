@@ -1,4 +1,4 @@
-from helpers import _uint8, _uint32, _uint16, _float32
+from helpers import _uint8, _uint16, _uint32, _int8, _int16, _int32, _float32
 from collections import namedtuple
 
 
@@ -578,11 +578,11 @@ class SimpleGridPointDataRepresentationTemplate(DataRepresentationTemplate):
 
     @property
     def binary_scale_factor(self):
-        return _uint16.unpack_from(self._data, 15)[0]
+        return _int16.unpack_from(self._data, 15)[0]
 
     @property
     def decimal_scale_factor(self):
-        return _uint16.unpack_from(self._data, 17)[0]
+        return _int16.unpack_from(self._data, 17)[0]
 
     @property
     def bit_count(self):
@@ -598,10 +598,58 @@ class SimpleGridPointDataRepresentationTemplate(DataRepresentationTemplate):
 
 class SimpleGridPointDataTemplate(BaseTemplate):
 
-    def __init__(self, data):
+    def __init__(self, data, bit_size):
         super(SimpleGridPointDataTemplate, self).__init__(self.data_type, 0, 'Grid Point Data - Simple Packing', data)
 
-def find_template(template_type, number, data, discipline=-1):
+        self._bit_size = bit_size
+
+    @property
+    def bits_per_datapoint(self):
+        return self._bit_size
+
+    @property
+    def bytes_per_data_point(self):
+        return int(self._bit_size/8)
+
+    @property
+    def data_point_count(self):
+        return int(len(self._data[5:])/(self._bit_size/8))
+
+    @property
+    def raw_data_array(self):
+        return self._data[5:]
+
+    @property
+    def unscaled_values(self):
+        vals = list(range(0, self.data_point_count))
+        count = 0
+        for i in range(5, self.data_point_count, self.bytes_per_data_point):
+            if self._bit_size == 8:
+                vals[count] = _int8.unpack_from(self._data, i)[0]
+            elif self._bit_size == 16:
+                vals[count] = _int16.unpack_from(self._data, i)[0]
+            elif self._bit_size == 32:
+                vals[count] = _int32.unpack_from(self._data, i)[0]
+            else:
+                vals[count] = int('NaN')
+            count += 1
+        return vals
+
+    def unscaled_value(self, index):
+        if index < 0 or index >= self.data_point_count:
+            return int('NaN')
+
+        data_index = index*self.bytes_per_data_point+5
+        if self._bit_size == 8:
+            return _int8.unpack_from(self._data, data_index)[0]
+        elif self._bit_size == 16:
+            return _int16.unpack_from(self._data, data_index)[0]
+        elif self._bit_size == 32:
+            return _int32.unpack_from(self._data, data_index)[0]
+        else:
+            return int('NaN')
+
+def find_template(template_type, number, data, discipline=-1, bit_size=-1):
     if template_type == BaseTemplate.grid_type:
         if number == 0:
             return LatitudeLongitudeGridTemplate(data)
@@ -613,6 +661,6 @@ def find_template(template_type, number, data, discipline=-1):
             return SimpleGridPointDataRepresentationTemplate(data)
     elif template_type == BaseTemplate.data_type:
         if number == 0:
-            return SimpleGridPointDataTemplate(data)
+            return SimpleGridPointDataTemplate(data, bit_size)
     return None
 

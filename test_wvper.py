@@ -16,9 +16,12 @@ print('binscale: ' + str(d.sections[4].template.binary_scale_factor))
 print('decimalscale: ' + str(d.sections[4].template.decimal_scale_factor))
 print('bits: ' + str(d.sections[4].template.bit_count))
 print('datapts: ' + str(d.sections[4].data_point_count))
+print('datapts_ver: ' + str(d.sections[6].template.data_point_count))
 print('firstpt: ' + str(helpers._uint8.unpack_from(d.sections[6]._data, 5)))
 print('hasbmp: ' + str(d.sections[5].has_bitmap))
 print('bitmappts: ' + str(d.sections[5].all_bit_truths))
+
+print('values: ' + str(d.sections[6].scaled_values))
 
 
 #sys.stdout.buffer.write(d.sections[6]._data[6:6+d.sections[4].template.bit_count])

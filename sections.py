@@ -260,6 +260,7 @@ class DataSection(BaseSection):
         super(DataSection, self).__init__(data, offset)
 
         self._data_representation_template = data_template
+        self._template = templates.find_template(templates.BaseTemplate.data_type, self.data_template.template_number, self._data, bit_size=data_template.bit_count)
 
     @property
     def data_template(self):
@@ -268,6 +269,14 @@ class DataSection(BaseSection):
     @property
     def raw_data_array(self):
         return self._data[5:]
+
+    @property
+    def scaled_values(self):
+        return [(self._data_representation_template.reference_value+(d*(2**self._data_representation_template.binary_scale_factor)))/(10**self._data_representation_template.decimal_scale_factor) for d in self.template.unscaled_values]
+
+    @property
+    def template(self):
+        return self._template
 
 
 class EndSection(BaseSection):
