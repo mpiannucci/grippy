@@ -97,31 +97,31 @@ class LatitudeLongitudeGridTemplate(GridTemplate):
 
     @property
     def start_latitude(self):
-        return _uint32.unpack_from(self._data, 46)[0]
+        return _uint32.unpack_from(self._data, 46)[0]*(10**-6)
 
     @property
     def start_longitude(self):
-        return _uint32.unpack_from(self._data, 50)[0]
+        return _uint32.unpack_from(self._data, 50)[0]*(10**-6)
 
     @property
     def resolution_component_flags(self):
-        return self._data[54]
+        return [int(b) for b in bin(self._data[54])[2:].rjust(8, '0')]
 
     @property
     def end_latitude(self):
-        return _uint32.unpack_from(self._data, 55)[0]
+        return _uint32.unpack_from(self._data, 55)[0]*(10**-6)
 
     @property
     def end_longitude(self):
-        return _uint32.unpack_from(self._data, 59)[0]
+        return _uint32.unpack_from(self._data, 59)[0]*(10**-6)
 
     @property
     def i_direction_increment(self):
-        return _uint32.unpack_from(self._data, 63)[0]
+        return _uint32.unpack_from(self._data, 63)[0]*(10**-6)
 
     @property
     def j_direction_increment(self):
-        return _uint32.unpack_from(self._data, 67)[0]
+        return _uint32.unpack_from(self._data, 67)[0]*(10**-6)
 
     @property
     def scanning_mode_flags(self):

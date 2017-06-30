@@ -259,8 +259,9 @@ class DataSection(BaseSection):
     def __init__(self, data, offset, data_template):
         super(DataSection, self).__init__(data, offset)
 
-        self._data_representation_template = data_template
-        self._template = templates.find_template(templates.BaseTemplate.data_type, self.data_template.template_number, self._data, bit_size=data_template.bit_count)
+        if data_template is not None:
+            self._data_representation_template = data_template
+            self._template = templates.find_template(templates.BaseTemplate.data_type, self.data_template.template_number, self._data, bit_size=data_template.bit_count)
 
     @property
     def data_template(self):
