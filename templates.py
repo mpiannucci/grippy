@@ -625,11 +625,11 @@ class SimpleGridPointDataTemplate(BaseTemplate):
         count = 0
         for i in range(5, self.data_point_count, self.bytes_per_data_point):
             if self._bit_size == 8:
-                vals[count] = _int8.unpack_from(self._data, i)[0]
+                vals[count] = _uint8.unpack_from(self._data, i)[0]
             elif self._bit_size == 16:
-                vals[count] = _int16.unpack_from(self._data, i)[0]
+                vals[count] = _uint16.unpack_from(self._data, i)[0]
             elif self._bit_size == 32:
-                vals[count] = _int32.unpack_from(self._data, i)[0]
+                vals[count] = _uint32.unpack_from(self._data, i)[0]
             else:
                 vals[count] = int('NaN')
             count += 1
@@ -641,11 +641,11 @@ class SimpleGridPointDataTemplate(BaseTemplate):
 
         data_index = index*self.bytes_per_data_point+5
         if self._bit_size == 8:
-            return _int8.unpack_from(self._data, data_index)[0]
+            return _uint8.unpack_from(self._data, data_index)[0]
         elif self._bit_size == 16:
-            return _int16.unpack_from(self._data, data_index)[0]
+            return _uint16.unpack_from(self._data, data_index)[0]
         elif self._bit_size == 32:
-            return _int32.unpack_from(self._data, data_index)[0]
+            return _uint32.unpack_from(self._data, data_index)[0]
         else:
             return int('NaN')
 
