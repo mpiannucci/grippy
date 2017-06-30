@@ -1,4 +1,4 @@
-from helpers import _uint32, _uint16, _float32
+from helpers import _uint8, _uint32, _uint16, _float32
 from collections import namedtuple
 
 
@@ -53,11 +53,11 @@ class LatitudeLongitudeGridTemplate(GridTemplate):
 
     @property
     def earth_shape_value(self):
-        return int(self._data[14])
+        return _uint8.unpack_from(self._data, 14)[0]
 
     @property
     def earth_shape(self):
-        shape = int(self._data[14])
+        shape = _uint8.unpack_from(self._data, 14)[0]
         if shape in self._earth_shape:
             return self._earth_shape[shape]
         else:
@@ -65,7 +65,7 @@ class LatitudeLongitudeGridTemplate(GridTemplate):
 
     @property
     def earth_radius_scale_factor(self):
-        return int(self._data[15])
+        return _uint8.unpack_from(self._data, 15)[0]
 
     @property
     def earth_radius_scaled_value(self):
@@ -73,7 +73,7 @@ class LatitudeLongitudeGridTemplate(GridTemplate):
 
     @property
     def earth_major_axis_scale_factor(self):
-        return int(self._data[20])
+        return _uint8.unpack_from(self._data, 20)[0]
 
     @property
     def earth_major_axis_scaled_value(self):
@@ -81,7 +81,7 @@ class LatitudeLongitudeGridTemplate(GridTemplate):
 
     @property
     def earth_minor_axis_scale_factor(self):
-        return int(self._data[25])
+        return _uint8.unpack_from(self._data, 25)[0]
 
     @property
     def earth_minor_axis_scaled_value(self):
@@ -452,7 +452,7 @@ class HorizontalAnalysisForecastTemplate(ProductTemplate):
 
     @property
     def parameter_category_value(self):
-        return int(self._data[9])
+        return _uint8.unpack_from(self._data, 9)[0]
 
     @property
     def parameter_category(self):
@@ -460,7 +460,7 @@ class HorizontalAnalysisForecastTemplate(ProductTemplate):
 
     @property
     def parameter_number_value(self):
-        return int(self._data[10])
+        return _uint8.unpack_from(self._data, 10)[0]
 
     @property
     def parameter_number(self):
@@ -471,7 +471,7 @@ class HorizontalAnalysisForecastTemplate(ProductTemplate):
 
     @property
     def generating_process_value(self):
-        return int(self._data[11])
+        return _uint8.unpack_from(self._data[11])[0]
 
     @property
     def generating_process(self):
@@ -483,11 +483,11 @@ class HorizontalAnalysisForecastTemplate(ProductTemplate):
 
     @property
     def minutes_after_reference_time(self):
-        return int(self._data[16])
+        return _uint8.unpack_from(self._data, 16)[0]
 
     @property
     def time_unit_value(self):
-        return int(self._data[17])
+        return _uint8.unpack_from(self._data, 17)[0]
 
     @property
     def time_unit(self):
@@ -499,11 +499,11 @@ class HorizontalAnalysisForecastTemplate(ProductTemplate):
 
     @property
     def first_fixed_surface_value(self):
-        return int(self._data[22])
+        return _uint8.unpack_from(self._data, 22)[0]
 
     @property
     def first_fixed_surface_scale_factor(self):
-        return int(self._data[23])
+        return _uint8.unpack_from(self._data, 23)[0]
 
     @property
     def first_fixed_surface_scaled_value(self):
@@ -511,11 +511,11 @@ class HorizontalAnalysisForecastTemplate(ProductTemplate):
 
     @property
     def second_fixed_surface_value(self):
-        return int(self._data[28])
+        return _uint8.unpack_from(self._data, 28)[0]
 
     @property
     def second_fixed_surface_scale_factor(self):
-        return int(self._data[29])
+        return _uint8.unpack_from(self._data, 29)[0]
 
     @property
     def second_fixed_surface_scaled_value(self):
@@ -586,11 +586,11 @@ class SimpleGridPointDataRepresentationTemplate(DataRepresentationTemplate):
 
     @property
     def bit_count(self):
-        return int(self._data[19])
+        return _uint8.unpack_from(self._data, 19)[0]
 
     @property
     def original_field_value(self):
-        return int(self._data[20])
+        return _uint8.unpack_from(self._data, 20)[0]
 
     @property
     def original_field_value_desc(self):

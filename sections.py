@@ -1,4 +1,4 @@
-from helpers import _uint16, _uint32, _uint64
+from helpers import _uint8, _uint16, _uint32, _uint64
 import datetime
 import templates
 
@@ -8,7 +8,7 @@ class BaseSection(object):
     def __init__(self, data, offset):
         self._length = _uint32.unpack_from(data, offset)[0]
         self._data = data[offset:offset+self._length]
-        self._section_num = int(self._data[4])
+        self._section_num = _uint8.unpack_from(self._data, 4)[0]
 
     @property
     def length(self):
@@ -44,7 +44,7 @@ class IndicatorSection(BaseSection):
 
     @property
     def discipline_value(self):
-        return int(self._data[6])
+        return _uint8.unpack_from(self._data, 6)[0]
 
     @property
     def discipline(self):
@@ -52,7 +52,7 @@ class IndicatorSection(BaseSection):
 
     @property
     def edition(self):
-        return int(self._data[7])
+        return _uint8.unpack_from(self._data[7])
 
     @property
     def total_length(self):
@@ -98,7 +98,7 @@ class IdentificationSection(BaseSection):
 
     @property
     def reference_date_significance(self):
-        significance = int(self._data[11])
+        significance = _uint8.unpack_from(self._data, 11)[0]
         if significance in self._reference_date_significances:
             return self._reference_date_significances[significance]
         else:
@@ -106,11 +106,11 @@ class IdentificationSection(BaseSection):
 
     @property
     def reference_date(self):
-        return datetime.datetime(_uint16.unpack_from(self._data, 12)[0], int(self._data[14]), int(self._data[15]), int(self._data[16]), int(self._data[17]))
+        return datetime.datetime(_uint16.unpack_from(self._data, 12)[0], _uint8.unpack_from(self._data, 14)[0], _uint8.unpack_from(self._data, 15)[0], _uint8.unpack_from(self._data, 16)[0], _uint8.unpack_from(self._data, 17)[0])
 
     @property
     def production_status(self):
-        status = int(self._data[19])
+        status = _uint8.unpack_from(self._data, 19)[0]
         if status in self._production_statuses:
             return self._production_statuses[status]
         else:
@@ -118,7 +118,7 @@ class IdentificationSection(BaseSection):
 
     @property
     def data_type(self):
-        data_type = int(self._data[20])
+        data_type = _uint8.unpack_from(self._data, 20)[0]
         if data_type in self._data_types:
             return self._data_types[data_type]
         else:
@@ -153,7 +153,7 @@ class GridDefinitionSection(BaseSection):
 
     @property
     def grid_definition_source(self):
-        source = int(self._data, 5)
+        source = _uint8.unpack_from(self._data, 5)[0]
         if source in self._grid_sources:
             return self._grid_sources[source]
         else:
@@ -165,11 +165,11 @@ class GridDefinitionSection(BaseSection):
 
     @property
     def optional_defining_number_count(self):
-        return int(self._data[10])
+        return _uint8.unpack_from(self._data, 10)[0]
 
     @property
     def defining_number_interpretation(self):
-        interp = int(self._data[11])
+        interp = _uint8.unpack_from(self._data, 11)[0]
         if interp in self._number_list_interpretation:
             return self._number_list_interpretation[interp]
         else:
@@ -211,7 +211,7 @@ class DataRepresentationSection(BaseSection):
 
     @property
     def data_point_count(self):
-        return _uint32.unpack(self._data, 5)[0]
+        return _uint32.unpack_from(self._data, 5)[0]
 
     @property
     def data_representation_template_number(self):
@@ -228,11 +228,31 @@ class BitMapSection(BaseSection):
 
     @property
     def bitmap_indicator_value(self):
-        return int(self._data[5])
+        return _uint8.unpack_from(self._data, 5)[0]
 
     @property
     def has_bitmap(self):
         return self.bitmap_indicator_value == 0
+
+    @property
+    def raw_bitmap_data(self):
+        return self._data[6:]
+
+    @property
+    def all_bit_data(self):
+        all_bits = []
+        for byte in self.raw_bitmap_data:
+            bits = [int(b) for b in bin(byte)[2:].rjust(8, '0')]
+            all_bits += bits
+        return all_bits
+
+    @property
+    def all_bit_truths(self):
+        return [bool(b) for b in self.all_bit_data]
+
+    @property
+    def does_data_exist(self, index):
+        return self.all_bit_truths[index]
 
 class DataSection(BaseSection):
 
@@ -244,6 +264,10 @@ class DataSection(BaseSection):
     @property
     def data_template(self):
         return self._data_representation_template
+
+    @property
+    def raw_data_array(self):
+        return self._data[5:]
 
 
 class EndSection(BaseSection):
