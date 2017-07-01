@@ -60,6 +60,19 @@ class Message(object):
     def section_count(self):
         return len(self.sections)
 
+def read_messages_raw(all_data, count=-1):
+    messages = []
+    
+    offset = 0
+    while offset < len(all_data):
+        messages.append(Message(all_data, offset))
+        offset = offset + messages[-1].length
+
+        if count > 0 and len(messages) == count:
+            break
+
+    return messages
+
 def read_messages(filename, count=-1):
     messages = []
     with open(filename, 'rb') as stream:
