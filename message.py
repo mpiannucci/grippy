@@ -60,9 +60,15 @@ class Message(object):
     def section_count(self):
         return len(self.sections)
 
+    def section_id(self, id):
+        for sec in self.sections:
+            if sec.section_number == id:
+                return sec
+        return None
+
 def read_messages_raw(all_data, count=-1):
     messages = []
-    
+
     offset = 0
     while offset < len(all_data):
         messages.append(Message(all_data, offset))
