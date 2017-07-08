@@ -7,6 +7,7 @@ import sys
 
 base_url = 'http://nomads.ncep.noaa.gov/cgi-bin/filter_wave_multi.pl?file=multi_1.at_10m.t{}z.f{}.grib2&all_lev=on&all_var=on&subregion=&leftlon=-71&rightlon=-70&toplat=41&bottomlat=40&dir=%2Fmulti_1.{}'
 
+
 def create_url(model_run, hour, model_date):
     model_run_str = str(model_run).rjust(2, '0')
     hour_str = str(hour).rjust(3, '0')
@@ -37,3 +38,13 @@ if __name__ == '__main__':
         sys.exit(0)
     grib_messages = [message.read_messages_raw(d) for d in result]
     print('Fetched ' + str(len(grib_messages)) + ' grib messages')
+    print('--------------------------------------------------------')
+    print('Variables Found: Timesteps')
+    for grib_timestep in grib_messages:
+        vars = []
+        for grib in grib_timestep:
+            if grib.sections[3].template.parameter_number is None:
+                continue
+            vars.append(grib.sections[3].template.parameter_number.abbrev)
+        print('Timestep: ' + str(grib_timestep[0].sections[3].template.forecast_time))
+        print(vars)

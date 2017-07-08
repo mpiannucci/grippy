@@ -32,6 +32,7 @@ print('datapts_ver: ' + str(d.sections[6].template.data_point_count))
 print('firstpt: ' + str(helpers._uint8.unpack_from(d.sections[6]._data, 5)))
 print('hasbmp: ' + str(d.sections[5].has_bitmap))
 print('bitmappts: ' + str(d.sections[5].all_bit_truths))
+print('emptyval: ' + str())
 
 print('time_unit_range: ' + str(d.sections[3].template.time_unit))
 print('time: ' + str(d.sections[3].template.forecast_time))
