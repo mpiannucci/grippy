@@ -613,7 +613,9 @@ class SimpleGridPointDataTemplate(BaseTemplate):
 
     @property
     def data_point_count(self):
-        return int(len(self._data[5:])/(self._bit_size/8))
+        if self._bit_size < 1:
+            return 0
+        return int((len(self._data[5:])*8)/(self._bit_size))
 
     @property
     def raw_data_array(self):
@@ -621,17 +623,24 @@ class SimpleGridPointDataTemplate(BaseTemplate):
 
     @property
     def unscaled_values(self):
+        if self._bit_size < 1:
+            return []
+
         vals = list(range(0, self.data_point_count))
         count = 0
-        for i in range(5, self.data_point_count, self.bytes_per_data_point):
-            if self._bit_size == 8:
-                vals[count] = _uint8.unpack_from(self._data, i)[0]
-            elif self._bit_size == 16:
-                vals[count] = _uint16.unpack_from(self._data, i)[0]
-            elif self._bit_size == 32:
-                vals[count] = _uint32.unpack_from(self._data, i)[0]
-            else:
-                vals[count] = int('NaN')
+        all_bits = ''
+        for byte in self.raw_data_array:
+            bits = ''.join([b for b in bin(byte)[2:].rjust(8, '0')])
+            all_bits += bits
+        for i in range(0, len(all_bits), self._bit_size):
+            end_index = i + self._bit_size
+            if end_index >= len(all_bits):
+                end_index = len(all_bits) - 1
+
+            if count >= len(vals):
+                break;
+
+            vals[count] = int(all_bits[i:end_index], 2)
             count += 1
         return vals
 
@@ -639,15 +648,12 @@ class SimpleGridPointDataTemplate(BaseTemplate):
         if index < 0 or index >= self.data_point_count:
             return int('NaN')
 
-        data_index = index*self.bytes_per_data_point+5
-        if self._bit_size == 8:
-            return _uint8.unpack_from(self._data, data_index)[0]
-        elif self._bit_size == 16:
-            return _uint16.unpack_from(self._data, data_index)[0]
-        elif self._bit_size == 32:
-            return _uint32.unpack_from(self._data, data_index)[0]
-        else:
-            return int('NaN')
+        all_bits = ''
+        for byte in self.raw_data_array:
+            bits = [b for b in bin(byte)[2:].rjust(8, '0')]
+            all_bits += bits
+        data_index = index*self._bit_size
+        return int(all_bits[index:index+self._bit_size], 2)
 
 def find_template(template_type, number, data, discipline=-1, bit_size=-1):
     if template_type == BaseTemplate.grid_type:

@@ -272,12 +272,38 @@ class DataSection(BaseSection):
         return self._data[5:]
 
     @property
-    def scaled_values(self):
+    def raw_bit_data(self):
+        all_bits = []
+        for byte in self.raw_data_array:
+            bits = [int(b) for b in bin(byte)[2:].rjust(8, '0')]
+            all_bits += bits
+        return all_bits
+
+    @property
+    def raw_scaled_values(self):
         return [(self._data_representation_template.reference_value+(d*(2**self._data_representation_template.binary_scale_factor)))/(10**self._data_representation_template.decimal_scale_factor) for d in self.template.unscaled_values]
 
     @property
     def template(self):
         return self._template
+
+    def all_scaled_values(self, bitmap_table):
+        if len(bitmap_table) < 1:
+            return self.raw_scaled_values
+
+        false_found_count = 0
+        data = list(range(len(bitmap_table)))
+        scaled_raw_data = self.raw_scaled_values
+        if len(scaled_raw_data) < 1:
+            return scaled_raw_data
+
+        for idx, truth in enumerate(bitmap_table):
+            if not truth:
+                data[idx] = float('NaN')
+                false_found_count += 1
+            else:
+                data[idx] = scaled_raw_data[idx-false_found_count]
+        return data
 
 
 class EndSection(BaseSection):

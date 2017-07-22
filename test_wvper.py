@@ -48,7 +48,7 @@ print('ni: ' + str(d.sections[2].template.parallel_point_count))
 print('nj: ' + str(d.sections[2].template.meridian_point_count))
 print('res_flags: '+ str(d.sections[2].template.resolution_component_flags))
 
-print('scaled_values: ' + str(d.sections[6].scaled_values))
+print('scaled_values: ' + str(d.sections[6].raw_scaled_values))
 
 
 
