@@ -147,13 +147,29 @@ class ProductTemplate(BaseTemplate):
             13: Parameter('Wind Chill Factor', 'K', 'WCF')
         }), 
         1: Product('Moisture', {
-
+            0: Parameter('Specific Humidity', 'kgkg-1', 'SPFH'),
+            1: Parameter('Relative Humidity', '%', 'RH'),
+            2: Parameter('Humidity Mixing Ratio', 'kgkg-1', 'MIXR'),
+            3: Parameter('Precipitable Water', 'kgm-2', 'PWAT'),
+            6: Parameter('Evaporation', 'kgm-2', 'EVP'),
+            7: Parameter('Precipitation Rate', 'kgm-2s-1', 'PRATE'),
+            8: Parameter('Total Precipitation', 'kgm-2', 'APCP')
         }),
         2: Product('Momentum', {
-
+            0: Parameter('Wind Direction', 'Degrees true', 'WDIR'),
+            1: Parameter('Wind Speed', 'ms-1', 'WIND'),
+            2: Parameter('U-Component of Wind', 'ms-1', 'UGRD'),
+            3: Parameter('V-Component of Wind', 'ms-1', 'VGRD'),
+            21: Parameter('Maximum Wind Speed', 'ms-1', 'MAXGUST'),
+            22: Parameter('Wind Gust Speed', 'ms-1', 'GUST'),
+            23: Parameter('U-Component of Wind Gust', 'ms-1', 'UGUST'),
+            24: Parameter('V-Component of Wind Gust', 'ms-1', 'VGUST'),
+            33: Parameter('Wind Fetch', 'm', 'WINDF')
         }), 
         3: Product('Mass', {
-
+            0: Parameter('Pressure', 'pa', 'PRES'),
+            1: Parameter('Pressure Reduced to MSL', 'pa', 'PRMSL'),
+            2: Parameter('Pressure Tendency', 'pas-1', 'PTEND')
         }),
         4: Product('Short-wave radiation', {
 
