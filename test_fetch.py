@@ -67,6 +67,9 @@ def read_var_info(timestep_messages, var):
     print('nj: ' + str(d.sections[2].template.meridian_point_count))
     print('res_flags: '+ str(d.sections[2].template.resolution_component_flags))
 
+    print('first surface: ' + str(d.sections[3].template.first_fixed_surface_type))
+    print('first Surface val: ' + str(d.sections[3].template.first_fixed_surface_scaled_value))
+
     print('scaled_values: ' + str(d.sections[6].all_scaled_values(d.sections[5].all_bit_truths)))
 
 if __name__ == '__main__':
@@ -84,7 +87,7 @@ if __name__ == '__main__':
     print('--------------------------------------------------------')
     print('Variables Found: Timesteps')
     for grib_timestep in grib_messages:
-        read_var_info(grib_timestep, 'WVPER')
+        read_var_info(grib_timestep, 'SWPER')
 
         vars = []
         for grib in grib_timestep:

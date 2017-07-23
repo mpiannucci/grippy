@@ -446,7 +446,10 @@ class ProductTemplate(BaseTemplate):
 
     # TODO
     _fixed_surface_types = {
-
+        1: 'Ground or Water Surface',
+        2: 'Cloud Base Level',
+        3: 'Level of Cloud Tops',
+        241: 'Ordered Sequence of Data'
     }
 
     # TODO
@@ -514,8 +517,12 @@ class HorizontalAnalysisForecastTemplate(ProductTemplate):
         return _uint32.unpack_from(self._data, 18)[0]
 
     @property
-    def first_fixed_surface_value(self):
+    def first_fixed_surface_type_value(self):
         return _uint8.unpack_from(self._data, 22)[0]
+
+    @property
+    def first_fixed_surface_type(self):
+        return self._fixed_surface_types.get(self.first_fixed_surface_type_value)
 
     @property
     def first_fixed_surface_scale_factor(self):
@@ -526,8 +533,12 @@ class HorizontalAnalysisForecastTemplate(ProductTemplate):
         return _uint32.unpack_from(self._data, 24)[0]
 
     @property
-    def second_fixed_surface_value(self):
+    def second_fixed_surface_type_value(self):
         return _uint8.unpack_from(self._data, 28)[0]
+
+    @property
+    def second_fixed_surface_type(self):
+        return self._fixed_surface_types.get(self.second_fixed_surface_type_value)
 
     @property
     def second_fixed_surface_scale_factor(self):
