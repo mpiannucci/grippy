@@ -29,6 +29,8 @@ def fetch_grib_data(url):
     return resp.content
 
 def read_var_info(timestep_messages, var):
+    d = None
+
     for m in timestep_messages:
         if m.section_count < 3:
             continue
@@ -94,5 +96,7 @@ if __name__ == '__main__':
             if grib.sections[3].template.parameter_number is None:
                 continue
             vars.append(grib.sections[3].template.parameter_number.abbrev)
-        print('Timestep: ' + str(grib_timestep[0].sections[3].template.forecast_time))
-        print(vars)
+
+        if len(grib_timestep) > 0:
+            print('Timestep: ' + str(grib_timestep[0].sections[3].template.forecast_time))
+            print(vars)
