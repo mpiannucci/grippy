@@ -1,4 +1,4 @@
-from helpers import _uint8, _uint16, _uint32, _int8, _int16, _int32, _float32
+from helpers import _uint8, _uint16, _uint32, _int16, _float32
 from collections import namedtuple
 
 
@@ -665,7 +665,7 @@ class SimpleGridPointDataTemplate(BaseTemplate):
                 end_index = len(all_bits) - 1
 
             if count >= len(vals):
-                break;
+                break
 
             vals[count] = int(all_bits[i:end_index], 2)
             count += 1
@@ -680,7 +680,10 @@ class SimpleGridPointDataTemplate(BaseTemplate):
             bits = [b for b in bin(byte)[2:].rjust(8, '0')]
             all_bits += bits
         data_index = index*self._bit_size
-        return int(all_bits[index:index+self._bit_size], 2)
+        end_index = data_index+self._bit_size
+        if end_index >= len(all_bits):
+            end_index = len(all_bits) - 1
+        return int(all_bits[data_index:end_index], 2)
 
 def find_template(template_type, number, data, discipline=-1, bit_size=-1):
     if template_type == BaseTemplate.grid_type:
