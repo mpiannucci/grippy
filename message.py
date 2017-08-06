@@ -2,6 +2,15 @@ from sections import *
 
 class Message(object):
 
+    INDICATOR_SECTION_INDEX = 0
+    IDENTIFICATION_SECTION_INDEX = 1
+    GRID_DEFINITION_SECTION_INDEX = 2
+    PRODUCT_DEFINITION_SECTION_INDEX = 3
+    DATA_REPRESENTATION_SECTION_INDEX = 4
+    BITMAP_SECTION_INDEX = 5
+    DATA_SECTION_INDEX = 6
+    END_SECTION_INDEX = 7
+
     def __init__(self, data, offset):
         if len(data) < 16:
             return
@@ -60,11 +69,11 @@ class Message(object):
     def section_count(self):
         return len(self.sections)
 
-    def section_id(self, id):
-        for sec in self.sections:
-            if sec.section_number == id:
-                return sec
-        return None
+    @property
+    def valid(self):
+        if self.section_count < 7:
+            return False
+        return self.sections[-1].valid
 
 def read_messages_raw(all_data, count=-1):
     messages = []
