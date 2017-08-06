@@ -69,7 +69,7 @@ def read_var_info(timestep_messages, var):
     print('res_flags: '+ str(d.sections[2].template.resolution_component_flags))
 
     print('first surface: ' + str(d.sections[3].template.first_fixed_surface_type))
-    print('first Surface val: ' + str(d.sections[3].template.first_fixed_surface_scaled_value))
+    print('first surface val: ' + str(d.sections[3].template.first_fixed_surface_scaled_value))
 
     print('scaled_values: ' + str(d.sections[6].all_scaled_values(d.sections[5].all_bit_truths)))
 
