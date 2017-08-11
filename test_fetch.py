@@ -61,7 +61,7 @@ def read_var_info(timestep_messages, var):
     print('lat_increment: ' + str(d.sections[2].template.i_direction_increment))
     print('end_lat: ' + str(d.sections[2].template.end_latitude))
     print('start_lon: ' + str(d.sections[2].template.start_longitude))
-    print('lon_increment: ' + str(d.sections[2].template.end_longitude))
+    print('lon_increment: ' + str(d.sections[2].template.j_direction_increment))
     print('end_lon: ' + str(d.sections[2].template.end_longitude))
     print('num_points: ' + str(d.sections[2].data_point_count))
     print('ni: ' + str(d.sections[2].template.parallel_point_count))
