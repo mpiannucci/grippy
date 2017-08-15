@@ -1,6 +1,6 @@
-from grippy.helpers import _uint8, _uint16, _uint32, _uint64
+from helpers import _uint8, _uint16, _uint32, _uint64
 import datetime
-import grippy.templates
+import templates
 
 
 class BaseSection(object):

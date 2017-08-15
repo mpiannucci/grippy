@@ -1,4 +1,4 @@
-import grippy.sections as sections
+import sections
 
 class Message(object):
 

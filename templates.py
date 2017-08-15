@@ -1,4 +1,4 @@
-from grippy.helpers import _uint8, _uint16, _uint32, _int16, _float32
+from helpers import _uint8, _uint16, _uint32, _int16, _float32
 from collections import namedtuple
 
 
