@@ -1,4 +1,4 @@
-import sections
+from . import sections
 
 class Message(object):
 

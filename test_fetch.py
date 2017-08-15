@@ -1,7 +1,7 @@
 import requests
 import datetime
 import multiprocessing
-import message
+from . import message
 import sys
 
 
