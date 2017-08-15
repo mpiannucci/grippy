@@ -22,7 +22,7 @@ class Message(object):
         if not indicatorSection.valid:
             return
         self.sections.append(indicatorSection)
-        self._data = data[offset:offset+self.sections[0].total_length]
+        self._data = bytearray(data[offset:offset+self.sections[0].total_length])
 
         # Read Identification section
         offset = self.sections[-1].length
