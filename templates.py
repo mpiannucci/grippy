@@ -664,7 +664,7 @@ class SimpleGridPointDataTemplate(BaseTemplate):
             if end_index >= len(all_bits):
                 end_index = len(all_bits) - 1
 
-            if count >= len(vals):
+            if count >= len(vals) or end_index == i:
                 break
 
             vals[count] = int(all_bits[i:end_index], 2)
