@@ -1,4 +1,4 @@
-from sections import * 
+import grippy.sections as sections
 
 class Message(object):
 
@@ -18,7 +18,7 @@ class Message(object):
         self.sections = []
 
         # Read Indication section
-        indicatorSection = IndicatorSection(data[offset:])
+        indicatorSection = sections.IndicatorSection(data[offset:])
         if not indicatorSection.valid:
             return
         self.sections.append(indicatorSection)
@@ -26,37 +26,37 @@ class Message(object):
 
         # Read Identification section
         offset = self.sections[-1].length
-        self.sections.append(IdentificationSection(self._data, offset))
+        self.sections.append(sections.IdentificationSection(self._data, offset))
 
         # Read optional local use section
         offset += self.sections[-1].length
-        local_use_section = LocalUseSection(self._data, offset)
+        local_use_section = sections.LocalUseSection(self._data, offset)
         if local_use_section.exists:
             self.sections.append(local_use_section)
             offset += self.sections[-1].length
 
         # Read Grid Definition section
-        self.sections.append(GridDefinitionSection(self._data, offset))
+        self.sections.append(sections.GridDefinitionSection(self._data, offset))
 
         # Read Product Definition section
         offset += self.sections[-1].length
-        self.sections.append(ProductDefinitionSection(self._data, offset, self.sections[0].discipline_value))
+        self.sections.append(sections.ProductDefinitionSection(self._data, offset, self.sections[0].discipline_value))
 
         # Read Data Representation section
         offset += self.sections[-1].length
-        self.sections.append(DataRepresentationSection(self._data, offset))
+        self.sections.append(sections.DataRepresentationSection(self._data, offset))
 
         # Read Bit Map section
         offset += self.sections[-1].length
-        self.sections.append(BitMapSection(self._data, offset))
+        self.sections.append(sections.BitMapSection(self._data, offset))
 
         # Read Data section
         offset += self.sections[-1].length
-        self.sections.append(DataSection(self._data, offset, self.sections[4].template))
+        self.sections.append(sections.DataSection(self._data, offset, self.sections[4].template))
 
         # Read End section
         offset += self.sections[-1].length
-        self.sections.append(EndSection(self._data, offset))
+        self.sections.append(sections.EndSection(self._data, offset))
 
     @property
     def length(self):
