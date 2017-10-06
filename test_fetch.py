@@ -1,8 +1,11 @@
-import requests
 import datetime
 import multiprocessing
 from . import message
 import sys
+try:
+    import requests
+except:
+    pass
 
 
 base_url = 'http://nomads.ncep.noaa.gov/cgi-bin/filter_wave_multi.pl?file=multi_1.at_10m.t{}z.f{}.grib2&all_lev=on&all_var=on&subregion=&leftlon=-71&rightlon=-70&toplat=41&bottomlat=40&dir=%2Fmulti_1.{}'
