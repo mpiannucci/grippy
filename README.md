@@ -1,6 +1,6 @@
 # grippy
 
-Dead simple native Python GRIB 2 data processing
+Dead simple pure Python GRIB 2 data processing
 
 ## Running the tests
 

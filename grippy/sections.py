@@ -1,5 +1,5 @@
-from .helpers import _uint8, _uint16, _uint32, _uint64
 import datetime
+from .helpers import _uint8, _uint16, _uint32, _uint64
 from . import templates
 
 
