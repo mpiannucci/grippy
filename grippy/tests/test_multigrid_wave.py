@@ -9,3 +9,8 @@ class TestMultiGridWave(TestCase):
 	def test_read(self):
 		messages = grippy.message.read_messages(TestMultiGridWave.MULTIGRID_GRIB_FILE)
 		self.assertTrue(len(messages) > 0)
+
+		print('Message count: ' + str(len(messages)))
+
+		for message in messages:
+			print('Section count: ' + str(message.section_count))
